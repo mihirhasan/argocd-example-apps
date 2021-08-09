@@ -39,10 +39,6 @@ spec:
        args:
        - >
          echo "testing test"
-         cp /etc/secret-volume/ssh-private-key /home/terrascan/.ssh/id_ed25519_github &&
-         cp /etc/ssh-config-secret/ssh-config /home/terrascan/.ssh/config &&
-         cp /etc/ssh-known-hosts-secret/ssh-known-hosts /home/terrascan/.ssh/known_hosts &&
-         chmod -R 400 /home/terrascan/.ssh/* &&
          /go/bin/terrascan scan -r git -u https://github.com/mihirhasan/argocd-example-apps/guestbook -i k8s -t k8s      
        securityContext:
          seccompProfile:
