@@ -1,63 +1,51 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
- generateName: terrascan-hook-
- annotations:
-   argocd.argoproj.io/hook: PreSync
+  generateName: terrascan-hook-
+  annotations:
+    argocd.argoproj.io/hook: PreSync
 spec:
- ttlSecondsAfterFinished: 3600
- template:
-   spec:
-     securityContext:
-       seccompProfile:
-         type: RuntimeDefault
-     volumes:
-
-       #add all required ssh keys need to clone your repos
-       - name: ssh-key-secret
-         secret:
-           secretName: ssh-key-secret
-       #add a secret for git config file   
-       - name: ssh-config
-         secret:
-           secretName: ssh-config-secret
-       #add a configmap for the ssh known_hosts file
-       - name: ssh-known-hosts
-         configMap:
-           name: known-hosts-config
-     containers:
-     - name: terrascan-argocd
-       image: accurics/terrascan:latest 
-       resources:
-         requests:
-           cpu: "1"
-           memory: "256Mi"
-         limits:
-           cpu: "1"
-           memory: "256Mi"
-       command: ["/bin/sh", "-c"]
-       args:
-       - >
-         echo "testing test"
-         /go/bin/terrascan scan -r git -u https://github.com/mihirhasan/argocd-example-apps/guestbook -i k8s -t k8s      
-       securityContext:
-         seccompProfile:
-           type: RuntimeDefault
-         allowPrivilegeEscalation: false
-         runAsNonRoot: true
-         runAsUser: 101
-       livenessProbe:
-         exec:
-           command:
-           - /go/bin/terrascan
-           - version
-         periodSeconds: 10
-         initialDelaySeconds: 10
-       readinessProbe:
-         exec:
-           command:
-           - /go/bin/terrascan
-           - version
-         periodSeconds: 10
-     restartPolicy: Never
- backoffLimit: 1
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: terrascan-argocd
+        image: 'accurics/terrascan:latest'
+        resources:
+          requests:
+            cpu: "1"
+            memory: "256Mi"
+          limits:
+            cpu: "1"
+            memory: "256Mi"
+        command:
+          - /bin/sh
+          - '-c'
+        args:
+          - >
+            /go/bin/terrascan scan -r git -u https://github.com/mihirhasan/argocd-example-apps.git//guestbook -i k8s --severity high
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 101
+        livenessProbe:
+          exec:
+            command:
+              - /go/bin/terrascan
+              - version
+          periodSeconds: 10
+          initialDelaySeconds: 10
+        readinessProbe:
+          exec:
+            command:
+              - /go/bin/terrascan
+              - version
+          periodSeconds: 10
+          initialDelaySeconds: 10
+      restartPolicy: Never
+  backoffLimit: 1
