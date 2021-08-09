@@ -63,18 +63,5 @@ spec:
            - /go/bin/terrascan
            - version
          periodSeconds: 10
-       #if want to use private repo
-       volumeMounts:
-         - mountPath: /etc/secret-volume
-           name: ssh-key-secret
-           readOnly: true
-         - mountPath: /etc/ssh-config-secret
-           name: ssh-config
-           readOnly: true
-         - mountPath: /etc/ssh-known-hosts-secret
-           name: ssh-known-hosts
-           readOnly: true
-
-
      restartPolicy: Never
  backoffLimit: 1
