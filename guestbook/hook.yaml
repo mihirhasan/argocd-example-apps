@@ -13,7 +13,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: terrascan-argocd
-        image: 'mihirhasan/testtag2'
+        image: 'mihirhasan/testtag2:try3'
         resources:
           requests:
             cpu: "1"
