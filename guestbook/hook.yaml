@@ -13,7 +13,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: terrascan-argocd
-        image: 'mihirhasan/testing:latest'
+        image: 'accurics/terrascan:latest'
         resources:
           requests:
             cpu: "1"
